@@ -1,5 +1,6 @@
 
 import './sass/main.scss';
+
 // ССылки
 const refs = {
       days: document.querySelector('[data-value="days"]'),
