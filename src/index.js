@@ -12,18 +12,18 @@ const refs = {
     
 // Класс
 class CountdownTimer {
-  constructor({selector, targetDate, onTick }) {
+  constructor({selector, targetDate}) {
       this.timerId = null;
       this.selector = selector;
       this.targetDate = targetDate;
-      this.onTick = onTick;
+      
   }
 
   start() {
     this.timerId = setInterval(() => {
       const deltaTime = this.targetDate - Date.now();
         const time = this.getTimeComponents(deltaTime);
-        this.onTick(time);
+        this.updateClockface(time);
     }, 1000);
   }
 
@@ -38,22 +38,24 @@ class CountdownTimer {
 
   pad(value) {
     return String(value).padStart(2, '0');
-    };
+  };
+
+   updateClockface({ days, hours, mins, secs }) {
+    refs.days.textContent = days;
+    refs.hours.textContent = hours;
+    refs.mins.textContent = mins;
+    refs.secs.textContent = secs;
+  };
+
 };
 
 // Экземпляр
 const countdownTimer = new CountdownTimer({
   selector: '#timer-1',
   targetDate: new Date('Dec 24, 2021'),
-  onTick: updateClockface
+
 });
 
 // Обновление интерфейса
- function updateClockface({ days, hours, mins, secs }) {
-    refs.days.textContent = days;
-    refs.hours.textContent = hours;
-    refs.mins.textContent = mins;
-    refs.secs.textContent = secs;
-  }
 
 countdownTimer.start();
