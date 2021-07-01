@@ -1,53 +1,58 @@
-
 import './sass/main.scss';
 
 
-// ССылки
-const refs = {
-      days: document.querySelector('[data-value="days"]'),
-      hours: document.querySelector('[data-value = "hours"]'),
-      mins: document.querySelector('[data-value = "mins"]'),
-      secs: document.querySelector('[data-value = "secs"]'),
-};
-    
 // Класс
 class CountdownTimer {
-  constructor({selector, targetDate}) {
-      this.timerId = null;
-      this.selector = selector;
-      this.targetDate = targetDate;
+  constructor({ selector, targetDate }) {
+    this.timerId = null;
+    this.selector = selector;
+    this.targetDate = targetDate;
+
+    this.start()
       
-  }
+  };
 
-  start() {
-    this.timerId = setInterval(() => {
-      const deltaTime = this.targetDate - Date.now();
-        const time = this.getTimeComponents(deltaTime);
-        this.updateClockface(time);
-    }, 1000);
-  }
-
-  getTimeComponents(time) {
-    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
-
-    return { days, hours, mins, secs };
+  getRefs() {
+    return {
+      days: document.querySelector(
+        `${this.selector} [data-value="days"]`,
+      ),
+      hours: document.querySelector(
+        `${this.selector} [data-value="hours"]`,
+      ),
+      mins: document.querySelector(
+        `${this.selector} [data-value="mins"]`,
+      ),
+      secs: document.querySelector(`${this.selector} [data-value="secs"]`),
     };
+  };
 
   pad(value) {
     return String(value).padStart(2, '0');
   };
 
-   updateClockface({ days, hours, mins, secs }) {
-    refs.days.textContent = days;
-    refs.hours.textContent = hours;
-    refs.mins.textContent = mins;
-    refs.secs.textContent = secs;
-  };
 
+  start() {
+    this.timerId = setInterval(() => {
+      const time = this.targetDate - Date.now();
+      const { days, hours, mins, secs } = this.getRefs();
+
+      days.textContent = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+
+      hours.textContent = this.pad(Math.floor(
+        (time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      ));
+
+      mins.textContent = this.pad(Math.floor(
+        (time % (1000 * 60 * 60)) / (1000 * 60),
+      ));
+      
+      secs.textContent = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+    }, 1000);
+  }
 };
+
+  
 
 // Экземпляр
 const countdownTimer = new CountdownTimer({
@@ -56,6 +61,3 @@ const countdownTimer = new CountdownTimer({
 
 });
 
-// Обновление интерфейса
-
-countdownTimer.start();
